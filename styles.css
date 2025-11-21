@@ -1,0 +1,102 @@
+:root {
+  --bg: #eafaf1;
+  --text: #0b3d1e;
+  --primary: #2ecc71;
+  --primary-hover: #28b463;
+  --card: #ffffff;
+  --border: #c7f0d6;
+  --max-width: 720px;
+}
+
+/* ベース */
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans JP", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 16px;
+}
+
+/* コンテナ */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  background-color: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(11,61,30,0.06);
+}
+
+/* 見出し */
+h2 { margin: 0 0 8px; text-align: center; color: var(--primary); font-size: 1.25rem; }
+h3 { margin: 0 0 24px; text-align: center; font-weight: 500; color: #145a32; font-size: 1rem; }
+
+/* フォームフィールド */
+.field {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.field label { justify-self: end; color: var(--text); }
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="tel"],
+.field input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fbfff9;
+  color: var(--text);
+}
+.field input::placeholder { color: #8aa995; }
+
+/* アクション */
+.actions { margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+button[type="submit"] {
+  min-width: 140px;
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(46,204,113,0.16);
+}
+button[type="submit"]:hover { background-color: var(--primary-hover); }
+
+/* ノート・リンク */
+.note { margin-top: 12px; font-size: 12px; color: #547a5f; text-align: center; }
+.link { margin-top: 16px; text-align: center; }
+.link a { color: var(--primary); text-decoration: none; }
+.link a:hover { text-decoration: underline; }
+
+/* モーダル */
+.modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 1200; }
+.modal[aria-hidden="false"] { display: flex; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+.modal-content { position: relative; background: #fff; border-radius: 10px; padding: 18px; width: 90%; max-width: 560px; box-shadow: 0 8px 40px rgba(0,0,0,0.2); z-index: 1210; }
+.modal-close { position: absolute; top: 8px; right: 8px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #333; }
+#success-title { margin: 0 0 8px; color: var(--primary); }
+#success-body { color: #234; font-size: 14px; }
+.json-pre { white-space: pre-wrap; word-break: break-word; margin: 0; background:#f6f9f6; padding:10px; border-radius:6px; border:1px solid var(--border); }
+
+/* モーダルアクション */
+.modal-actions { text-align: right; margin-top: 12px; }
+.btn-primary { background: var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; }
+.btn-primary:hover { background: var(--primary-hover); }
+
+/* レスポンシブ */
+@media (max-width: 520px) {
+  .field { grid-template-columns: 1fr; }
+  .field label { justify-self: start; }
+}
