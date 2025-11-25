@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LINE風チャット</title>
+  <title>LINE風チャット(WebSocket)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -85,7 +85,7 @@
 </head>
 <body>
   <div class="chat-container">
-    <div class="chat-header">LINE風チャット</div>
+    <div class="chat-header">LINE風チャット(WebSocket)</div>
     <div class="chat-messages" id="chatMessages"></div>
     <div class="chat-input">
       <input type="text" id="chatInput" placeholder="メッセージを入力" />
@@ -94,7 +94,9 @@
   </div>
 
   <script>
-    const API_ENDPOINT = "https://q35t5qjt52xfusaaetdurc6fua0mhykz.lambda-url.ap-northeast-1.on.aws/";
+    const WEBSOCKET_URL = "wss://vy6l8bic29.execute-api.ap-northeast-1.amazonaws.com/default/";
+    const socket = new WebSocket(WEBSOCKET_URL);
+
     const chatMessages = document.getElementById("chatMessages");
     const chatInput = document.getElementById("chatInput");
     const sendBtn = document.getElementById("sendBtn");
@@ -107,25 +109,34 @@
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    async function sendMessage() {
+    socket.onopen = () => {
+      console.log("WebSocket接続成功");
+      addMessage("接続しました", "bot");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      addMessage(data.message || "返信なし", "bot");
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocketエラー:", error);
+      addMessage("接続エラー", "bot");
+    };
+
+    socket.onclose = () => {
+      addMessage("接続が切断されました", "bot");
+    };
+
+    function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
 
       addMessage(text, "user");
       chatInput.value = "";
 
-      try {
-        const response = await fetch(API_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text }),
-        });
-        const data = await response.json();
-        addMessage(data.reply || "返信なし", "bot");
-      } catch (error) {
-        console.error("Error:", error);
-        addMessage("エラーが発生しました", "bot");
-      }
+      // API GatewayのWebSocketは「action」を指定する必要あり
+      socket.send(JSON.stringify({ action: "sendMessage", message: text }));
     }
 
     sendBtn.addEventListener("click", sendMessage);
@@ -135,4 +146,3 @@
   </script>
 </body>
 </html>
-
